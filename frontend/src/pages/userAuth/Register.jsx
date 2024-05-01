@@ -1,6 +1,8 @@
 // src/pages/Register.js
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { registerUser } from "../../controllers/userController";
+import { UserContext } from "../../context/UserContext";
 
 const Register = () => {
 	const [formData, setFormData] = useState({
@@ -10,8 +12,9 @@ const Register = () => {
 	});
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-
-	const [error, setError] = useState("jii");
+	const [error, setError] = useState("");
+	const navigate = useNavigate();
+	const { setUser } = useContext(UserContext);
 
 	const { email, password, confirmPassword } = formData;
 
@@ -19,11 +22,25 @@ const Register = () => {
 		setFormData({ ...formData, [e.target.name]: e.target.value });
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		// Add your Register logic here
+		try {
+			// Register user
+			await registerUser(email, password, confirmPassword);
+			//Set user state
+			setUser({ email, posts: [] });
+			//Navigate to dashboard upon succesful registration
+			navigate("/");
+		} catch (error) {
+			console.log(error);
+			setError(error);
 
-		console.log("Form submitted:", formData);
+			// Clear the error after 10 seconds
+			setTimeout(() => {
+				setError("");
+			}, 30000); // 10 seconds in milliseconds
+		}
 	};
 
 	const togglePasswordVisibility = () => {
@@ -35,20 +52,23 @@ const Register = () => {
 	};
 
 	return (
-		<div className="h-[calc(100vh - 16px)] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+		<div className="h-[80vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-lg w-full space-y-8  shadow-md p-12">
 				{error && (
 					<p className="bg-red-300 text-xs mt-2 text-red-800 p-1 rounded-md justify-left items-center flex px-6">
 						<i className="fa-solid fa-triangle-exclamation text-2xl mr-4"></i>
-						<span className="font-medium text-sm">{error}</span>
+						<span className="font-medium text-sm">
+							{error.message}
+						</span>
 					</p>
 				)}
 				<div>
-					<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-						Create new user
+					<h1 className="text-center font-medium">Welcome</h1>
+					<h2 className="text-center text-xl font-extrabold text-gray-900">
+						Register to create new user
 					</h2>
 				</div>
-				<form className="mt-8 space-y-6" onSubmit={handleSubmit}>
+				<form className="mt-4 space-y-6" onSubmit={handleSubmit}>
 					<input type="hidden" name="remember" value="true" />
 					<div className="rounded-md shadow-sm space-y-3">
 						<div>
@@ -93,9 +113,9 @@ const Register = () => {
 								className="absolute right-4 bottom-2 z-10 cursor-pointer"
 							>
 								{showPassword ? (
-									<i className="fa-solid fa-eye-slash"></i>
+									<i className="fa-solid fa-eye-slash text-gray-700"></i>
 								) : (
-									<i className="fa-solid fa-eye"></i>
+									<i className="fa-solid fa-eye text-gray-700"></i>
 								)}
 							</div>
 						</div>
@@ -122,9 +142,9 @@ const Register = () => {
 								className="absolute right-4 bottom-2 z-10 cursor-pointer"
 							>
 								{showConfirmPassword ? (
-									<i className="fa-solid fa-eye-slash"></i>
+									<i className="fa-solid fa-eye-slash text-gray-700"></i>
 								) : (
-									<i className="fa-solid fa-eye"></i>
+									<i className="fa-solid fa-eye text-gray-700"></i>
 								)}
 							</div>
 						</div>
@@ -133,7 +153,7 @@ const Register = () => {
 					<div>
 						<button
 							type="submit"
-							className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+							className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#00756a] hover:bg-white hover:text-[#00756a] hover:border-2 hover:border-[#00756a]"
 						>
 							Register
 						</button>

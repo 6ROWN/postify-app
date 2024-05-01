@@ -5,10 +5,10 @@ const Post = require("../models/postModel");
 // @routes  GET api/post
 // @access  public
 const getPosts = asyncHandler(async (req, res) => {
-	const post = await Post.find();
+	const post = await Post.find().sort({ createdAt: -1 });
 
 	res.status(200).json({
-		message: "Get all post",
+		message: "Get all posts",
 		post,
 	});
 });
@@ -17,10 +17,12 @@ const getPosts = asyncHandler(async (req, res) => {
 // @routes  GET api/post/user
 // @access  private
 const getUserPosts = asyncHandler(async (req, res) => {
-	const post = await Post.find({ userId: req.user._id });
+	const post = await Post.find({ userId: req.user._id }).sort({
+		createdAt: -1,
+	});
 
 	res.status(200).json({
-		message: "Get all post",
+		message: "Get user posts",
 		post,
 	});
 });
@@ -65,8 +67,6 @@ const updatePost = asyncHandler(async (req, res) => {
 	}
 
 	const post = await Post.findById(id);
-
-	console.log(post);
 
 	if (!post) {
 		res.status(404);

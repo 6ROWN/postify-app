@@ -1,6 +1,8 @@
 // src/pages/LoginPage.js
-import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import React, { useContext, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { loginUser } from "../../controllers/userController";
+import { UserContext } from "../../context/UserContext";
 
 const Login = () => {
 	const [formData, setFormData] = useState({
@@ -8,8 +10,11 @@ const Login = () => {
 		password: "",
 	});
 
-	const [error, setError] = useState("he");
+	const [error, setError] = useState("");
 	const [showPassword, setShowPassword] = useState(false);
+
+	const { setUser } = useContext(UserContext);
+	const navigate = useNavigate();
 
 	const { email, password } = formData;
 
@@ -21,25 +26,42 @@ const Login = () => {
 		setShowPassword((prevState) => !prevState);
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		// Add your login logic here
 
-		console.log("Form submitted:", formData);
+		const { email, password } = formData;
+
+		try {
+			//Login user
+			await loginUser(email, password);
+			//Set user state
+			setUser({ email, posts: [] });
+			//Route user to dashboard
+			navigate("/");
+		} catch (error) {
+			setError(error);
+
+			// Clear the error after 10 seconds
+			setTimeout(() => {
+				setError("");
+			}, 30000); // 10 seconds in milliseconds
+		}
 	};
 
 	return (
-		<div className="h-[calc(100vh - 16px)] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
+		<div className="h-[80vh] flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
 			<div className="max-w-lg w-full space-y-8 mt-6 shadow-md p-12">
 				{error && (
 					<p className="bg-red-300 text-xs mt-2 text-red-800 p-1 rounded-md justify-left items-center flex px-6">
 						<i className="fa-solid fa-triangle-exclamation text-2xl mr-4"></i>
-						<span className="font-medium text-sm">{error}</span>
+						<span className="font-medium text-sm">
+							{error.message}
+						</span>
 					</p>
 				)}
 				<div>
 					<h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-						Sign in to your account
+						Sign in
 					</h2>
 				</div>
 				<form className="mt-8 space-y-6" onSubmit={handleSubmit}>
@@ -87,9 +109,9 @@ const Login = () => {
 								className="absolute right-4 bottom-2 z-10 cursor-pointer"
 							>
 								{showPassword ? (
-									<i className="fa-solid fa-eye-slash"></i>
+									<i className="fa-solid fa-eye-slash text-gray-700"></i>
 								) : (
-									<i className="fa-solid fa-eye"></i>
+									<i className="fa-solid fa-eye text-gray-700"></i>
 								)}
 							</div>
 						</div>
@@ -98,7 +120,7 @@ const Login = () => {
 					<div>
 						<button
 							type="submit"
-							className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-gray-700 hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+							className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-[#00756a] hover:bg-white hover:text-[#00756a] hover:border-2 hover:border-[#00756a]"
 						>
 							Sign in
 						</button>
