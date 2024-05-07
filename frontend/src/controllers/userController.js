@@ -1,6 +1,6 @@
 const loginUser = async (email, password) => {
 	try {
-		const response = await fetch("api/users/login", {
+		const response = await fetch("https://postify-app.onrender.com/api/users/login", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
@@ -29,7 +29,7 @@ const registerUser = async (email, password, confirmPassword) => {
 	}
 
 	try {
-		const response = await fetch("api/users/", {
+		const response = await fetch("https://postify-app.onrender.com/api/users/", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
