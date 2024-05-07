@@ -1,6 +1,8 @@
 //Get all posts
 const getPosts = async () => {
-	const response = await fetch("/api/posts");
+	const response = await fetch(
+		`${import.meta.env.VITE_SERVER_URL}/api/posts`
+	);
 	const data = response.json();
 
 	if (!response.ok) {
@@ -12,11 +14,14 @@ const getPosts = async () => {
 
 //Get user
 const getUserPosts = async () => {
-	const response = await fetch("/api/posts/user", {
-		headers: {
-			Authorization: `Bearer ${localStorage.getItem("token")}`,
-		},
-	});
+	const response = await fetch(
+		`${import.meta.env.VITE_SERVER_URL}/api/posts/user`,
+		{
+			headers: {
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		}
+	);
 
 	const data = await response.json();
 
@@ -29,14 +34,17 @@ const getUserPosts = async () => {
 
 //Create new post
 const setPost = async (title, body) => {
-	const response = await fetch("/api/posts", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${localStorage.getItem("token")}`,
-		},
-		body: JSON.stringify({ title, body }),
-	});
+	const response = await fetch(
+		`${import.meta.env.VITE_SERVER_URL}/api/posts`,
+		{
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ title, body }),
+		}
+	);
 
 	const data = await response.json();
 	if (!response.ok) {
@@ -47,14 +55,17 @@ const setPost = async (title, body) => {
 
 // Edit post
 const updatePost = async (id, title, body) => {
-	const response = await fetch(`api/posts/${id}`, {
-		method: "PUT",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${localStorage.getItem("token")}`,
-		},
-		body: JSON.stringify({ title, body }),
-	});
+	const response = await fetch(
+		`${import.meta.env.VITE_SERVER_URL}/api/posts/${id}`,
+		{
+			method: "PUT",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+			body: JSON.stringify({ title, body }),
+		}
+	);
 	const data = await response.json();
 	if (!response.ok) {
 		throw new Error(data.error);
@@ -64,13 +75,16 @@ const updatePost = async (id, title, body) => {
 
 // Delete post
 const deletePost = async (id) => {
-	const response = await fetch(`api/posts/${id}`, {
-		method: "DELETE",
-		headers: {
-			"Content-Type": "application/json",
-			Authorization: `Bearer ${localStorage.getItem("token")}`,
-		},
-	});
+	const response = await fetch(
+		`${import.meta.env.VITE_SERVER_URL}/api/posts/${id}`,
+		{
+			method: "DELETE",
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: `Bearer ${localStorage.getItem("token")}`,
+			},
+		}
+	);
 
 	const data = await response.json();
 	if (!response.ok) {

@@ -1,12 +1,15 @@
 const loginUser = async (email, password) => {
 	try {
-		const response = await fetch("api/users/login", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ email, password }),
-		});
+		const response = await fetch(
+			`${import.meta.env.VITE_SERVER_URL}/api/users/login`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email, password }),
+			}
+		);
 
 		const data = await response.json();
 
@@ -29,13 +32,16 @@ const registerUser = async (email, password, confirmPassword) => {
 	}
 
 	try {
-		const response = await fetch("api/users/", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify({ email, password }),
-		});
+		const response = await fetch(
+			`${import.meta.env.VITE_SERVER_URL}/api/users/`,
+			{
+				method: "POST",
+				headers: {
+					"Content-Type": "application/json",
+				},
+				body: JSON.stringify({ email, password }),
+			}
+		);
 
 		const data = await response.json();
 
