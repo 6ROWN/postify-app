@@ -91,28 +91,29 @@ const updatePost = asyncHandler(async (req, res) => {
 
 const deletePost = asyncHandler(async (req, res) => {
 	const { id } = req.params;
+
 	if (!id) {
-		res.status(400).json({
+		return res.status(400).json({
 			message: "Id field needed",
 		});
 	}
 
-	const post = await Post.findById(id);
+	const post = await Post.findByIdAndDelete(id);
 
 	if (!post) {
-		res.status(404);
-		throw new Error(`ID ${id} not found`);
+		return res.status(404).json({
+			message: `ID ${id} not found`,
+		});
 	}
 
-	await Post.deleteOne();
-
-	//Check if the user owns this post
+	// Check if the user owns this post
 	if (!post.userId.equals(req.user._id)) {
-		res.status(400);
-		throw new Error("You are not authorized to edit this post");
+		return res.status(400).json({
+			message: "You are not authorized to delete this post",
+		});
 	}
 
-	res.status(200).json({
+	return res.status(200).json({
 		message: `${id} ID deleted successfully`,
 	});
 });

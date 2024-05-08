@@ -90,6 +90,7 @@ const deletePost = async (id) => {
 	if (!response.ok) {
 		throw new Error(data.error);
 	}
+	console.log(data);
 	return data;
 };
 
